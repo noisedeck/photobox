@@ -65,9 +65,10 @@ function showFlash() {
 export function startVideoRecording(canvas) {
     const stream = canvas.captureStream(30)
     const chunks = []
-    const recorder = new MediaRecorder(stream, {
-        mimeType: 'video/webm;codecs=vp9'
-    })
+    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+        ? 'video/webm;codecs=vp9'
+        : 'video/webm'
+    const recorder = new MediaRecorder(stream, { mimeType })
     const startTime = Date.now()
 
     recorder.ondataavailable = e => {

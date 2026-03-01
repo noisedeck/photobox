@@ -29,8 +29,15 @@ class PhotobombApp {
         console.log('[Photobomb] Initializing...')
 
         // Start camera
-        await this._camera.start()
-        console.log(`[Photobomb] Camera: ${this._camera.width}x${this._camera.height}`)
+        try {
+            await this._camera.start()
+            console.log(`[Photobomb] Camera: ${this._camera.width}x${this._camera.height}`)
+        } catch (err) {
+            console.error('[Photobomb] Camera access denied:', err)
+            const stage = document.getElementById('stage')
+            stage.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-dim);"><p style="font-size: 18px; margin-bottom: 8px;">Camera access required</p><p>Please allow camera access and reload the page.</p></div>'
+            return
+        }
 
         // Initialize gallery
         const filmstrip = document.getElementById('filmstrip')
