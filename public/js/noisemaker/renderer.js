@@ -72,6 +72,7 @@ export class PhotobombRenderer {
         }
 
         await this._renderer.compile(dsl)
+        this._renderer.start()
         this._uploadVideoTexture()
         this._startLoop()
     }
@@ -83,13 +84,10 @@ export class PhotobombRenderer {
     _uploadVideoTexture() {
         if (!this._videoSource) return
         if (this._videoSource.readyState < 2) return // HAVE_CURRENT_DATA
-        this._renderer.updateTextureFromSource?.('imageTex', this._videoSource, { flipY: false })
-        // Update imageSize uniform for aspect ratio correction
-        const w = this._videoSource.videoWidth || this._videoSource.width
-        const h = this._videoSource.videoHeight || this._videoSource.height
-        if (w && h) {
-            this._renderer.state?.setValue?.('media', 'imageSize', [w, h])
-        }
+        // Texture ID must match compiled step: media() is always step 0
+        this._renderer.updateTextureFromSource?.('imageTex_step_0', this._videoSource, { flipY: false })
+        // imageSize must match canvas resolution (shader maps gl_FragCoord.xy / imageSize)
+        this._renderer.applyStepParameterValues?.({ step_0: { imageSize: [this.width, this.height] } })
     }
 
     _startLoop() {
@@ -106,6 +104,7 @@ export class PhotobombRenderer {
             cancelAnimationFrame(this._animRAF)
             this._animRAF = null
         }
+        this._renderer.stop?.()
     }
 
     resize(width, height) {

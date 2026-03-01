@@ -7,8 +7,7 @@
 
 import { PhotobombRenderer } from './noisemaker/index.js'
 
-const TILE_WIDTH = 320
-const TILE_HEIGHT = 240
+const TILE_BASE = 320
 
 export class EffectGrid {
     /**
@@ -18,6 +17,11 @@ export class EffectGrid {
     constructor(container, videoSource) {
         this._container = container
         this._videoSource = videoSource
+        // Derive tile dimensions from camera aspect ratio
+        const camW = videoSource.videoWidth || 1280
+        const camH = videoSource.videoHeight || 720
+        this._tileWidth = TILE_BASE
+        this._tileHeight = Math.round(TILE_BASE * camH / camW)
         this._tiles = []       // { canvas, renderer, name }
         this._initialized = false
         this._onTileClick = null
@@ -41,8 +45,8 @@ export class EffectGrid {
             tile.dataset.index = i
 
             const canvas = document.createElement('canvas')
-            canvas.width = TILE_WIDTH
-            canvas.height = TILE_HEIGHT
+            canvas.width = this._tileWidth
+            canvas.height = this._tileHeight
             tile.appendChild(canvas)
 
             const label = document.createElement('div')
@@ -56,8 +60,8 @@ export class EffectGrid {
             this._container.appendChild(tile)
 
             const renderer = new PhotobombRenderer(canvas, {
-                width: TILE_WIDTH,
-                height: TILE_HEIGHT
+                width: this._tileWidth,
+                height: this._tileHeight
             })
             await renderer.init()
             renderer.setVideoSource(this._videoSource)
