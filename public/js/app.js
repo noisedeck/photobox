@@ -7,6 +7,7 @@ import { Camera } from './camera.js'
 import { EffectGrid } from './grid.js'
 import { TABS, getEffect } from './effects.js'
 import { capturePhoto, startVideoRecording } from './capture.js'
+import { Gallery } from './gallery.js'
 
 class PhotobombApp {
     constructor() {
@@ -20,6 +21,7 @@ class PhotobombApp {
         this._view = 'grid'  // 'grid' | 'fullsize'
         this._recording = null
         this._timerInterval = null
+        this._gallery = null
     }
 
     async init() {
@@ -29,6 +31,10 @@ class PhotobombApp {
         // Start camera
         await this._camera.start()
         console.log(`[Photobomb] Camera: ${this._camera.width}x${this._camera.height}`)
+
+        // Initialize gallery
+        const filmstrip = document.getElementById('filmstrip')
+        this._gallery = new Gallery(filmstrip)
 
         // Initialize grid
         const gridContainer = document.getElementById('effect-grid')
@@ -133,8 +139,8 @@ class PhotobombApp {
     async _capturePhoto() {
         const canvas = document.getElementById('fullsize-canvas')
         const blob = await capturePhoto(canvas)
+        await this._gallery.add('photo', blob, canvas)
         console.log(`[Photobomb] Photo captured: ${(blob.size / 1024).toFixed(0)}KB`)
-        // Gallery integration in Task 9
     }
 
     _toggleVideoRecording() {
@@ -171,14 +177,14 @@ class PhotobombApp {
         const blob = await this._recording.stop()
         this._recording = null
 
-        // Update UI
         const shutter = document.getElementById('shutter-btn')
         shutter.classList.remove('recording')
         document.getElementById('recording-status').classList.add('hidden')
         document.getElementById('recording-timer').textContent = '0:00'
 
+        const canvas = document.getElementById('fullsize-canvas')
+        await this._gallery.add('video', blob, canvas)
         console.log(`[Photobomb] Video captured: ${(blob.size / 1024 / 1024).toFixed(1)}MB`)
-        // Gallery integration in Task 9
     }
 
     _setupControls() {
