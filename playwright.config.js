@@ -6,6 +6,12 @@ export default defineConfig({
     use: {
         baseURL: 'http://localhost:3005',
         permissions: ['camera'],
+        launchOptions: {
+            args: [
+                '--use-fake-device-for-media-stream',
+                '--use-fake-ui-for-media-stream',
+            ],
+        },
     },
     webServer: {
         command: 'npx http-server public -p 3005 -c-1',
