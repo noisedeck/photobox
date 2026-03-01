@@ -61,7 +61,8 @@ class PhotobombApp {
         const fullsizeCanvas = document.getElementById('fullsize-canvas')
         this._fullsizeRenderer = new PhotobombRenderer(fullsizeCanvas, {
             width: this._camera.width,
-            height: this._camera.height
+            height: this._camera.height,
+            preserveDrawingBuffer: true
         })
         await this._fullsizeRenderer.init()
         this._fullsizeRenderer.setVideoSource(this._camera.video)

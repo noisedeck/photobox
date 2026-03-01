@@ -26,7 +26,7 @@ export class PhotobombRenderer {
             useBundles: true,
             bundlePath: `${SHADER_CDN}/effects`,
             alpha: false,
-            preserveDrawingBuffer: true,
+            preserveDrawingBuffer: options.preserveDrawingBuffer ?? false,
             onError: options.onError
         })
 
