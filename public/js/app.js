@@ -22,6 +22,7 @@ class PhotobombApp {
         this._recording = null
         this._timerInterval = null
         this._gallery = null
+        this._busy = false
     }
 
     async init() {
@@ -99,35 +100,45 @@ class PhotobombApp {
     }
 
     async _enterFullsize(tileIndex) {
-        const effect = getEffect(this._currentTab, tileIndex)
-        this._currentEffect = { ...effect, tileIndex }
+        if (this._view === 'fullsize' || this._busy) return
+        this._busy = true
+        try {
+            const effect = getEffect(this._currentTab, tileIndex)
+            this._currentEffect = { ...effect, tileIndex }
 
-        const gridView = document.getElementById('grid-view')
-        const fullsizeView = document.getElementById('fullsize-view')
+            const gridView = document.getElementById('grid-view')
+            const fullsizeView = document.getElementById('fullsize-view')
 
-        // Fade out grid
-        gridView.classList.add('fading')
-        await new Promise(r => setTimeout(r, 200))
+            // Fade out grid
+            gridView.classList.add('fading')
+            await new Promise(r => setTimeout(r, 200))
 
-        // Stop grid renderers
-        this._grid.stopAll()
+            // Stop grid renderers
+            this._grid.stopAll()
 
-        // Compile full-size renderer
-        const fullsizeCanvas = document.getElementById('fullsize-canvas')
-        fullsizeCanvas.width = this._camera.width
-        fullsizeCanvas.height = this._camera.height
-        this._fullsizeRenderer.resize(this._camera.width, this._camera.height)
-        await this._fullsizeRenderer.compile(effect.dsl)
+            // Compile full-size renderer
+            const fullsizeCanvas = document.getElementById('fullsize-canvas')
+            fullsizeCanvas.width = this._camera.width
+            fullsizeCanvas.height = this._camera.height
+            this._fullsizeRenderer.resize(this._camera.width, this._camera.height)
+            await this._fullsizeRenderer.compile(effect.dsl)
 
-        // Switch views
-        document.getElementById('effect-name').textContent = effect.name
-        gridView.classList.add('hidden')
-        gridView.classList.remove('fading')
-        fullsizeView.classList.remove('hidden')
-        this._view = 'fullsize'
+            // Switch views
+            document.getElementById('effect-name').textContent = effect.name
+            gridView.classList.add('hidden')
+            gridView.classList.remove('fading')
+            fullsizeView.classList.remove('hidden')
+            this._view = 'fullsize'
+        } finally {
+            this._busy = false
+        }
     }
 
     async _exitFullsize() {
+        if (this._recording) {
+            await this._stopVideoRecording()
+        }
+
         const gridView = document.getElementById('grid-view')
         const fullsizeView = document.getElementById('fullsize-view')
 
@@ -145,10 +156,16 @@ class PhotobombApp {
     }
 
     async _capturePhoto() {
-        const canvas = document.getElementById('fullsize-canvas')
-        const blob = await capturePhoto(canvas)
-        await this._gallery.add('photo', blob, canvas)
-        console.log(`[Photobomb] Photo captured: ${(blob.size / 1024).toFixed(0)}KB`)
+        if (this._busy) return
+        this._busy = true
+        try {
+            const canvas = document.getElementById('fullsize-canvas')
+            const blob = await capturePhoto(canvas)
+            await this._gallery.add('photo', blob, canvas)
+            console.log(`[Photobomb] Photo captured: ${(blob.size / 1024).toFixed(0)}KB`)
+        } finally {
+            this._busy = false
+        }
     }
 
     _toggleVideoRecording() {
