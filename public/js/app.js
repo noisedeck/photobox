@@ -163,6 +163,8 @@ class PhotobombApp {
             const blob = await capturePhoto(canvas)
             await this._gallery.add('photo', blob, canvas)
             console.log(`[Photobomb] Photo captured: ${(blob.size / 1024).toFixed(0)}KB`)
+        } catch (err) {
+            console.error('[Photobomb] Photo capture failed:', err)
         } finally {
             this._busy = false
         }

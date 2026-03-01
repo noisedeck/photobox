@@ -24,6 +24,10 @@ export class Gallery {
     async add(type, blob, sourceCanvas) {
         const id = this._nextId++
 
+        // Force GPU flush before reading WebGL canvas
+        const gl = sourceCanvas.getContext('webgl2') || sourceCanvas.getContext('webgl')
+        if (gl) gl.finish()
+
         // Generate thumbnail from canvas
         const thumbCanvas = document.createElement('canvas')
         thumbCanvas.width = 56
