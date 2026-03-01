@@ -101,9 +101,7 @@ export class EffectGrid {
     /** Resume all renderers (e.g. when returning from full-size view) */
     async resumeAll() {
         for (const tile of this._tiles) {
-            if (tile.renderer._currentDsl) {
-                await tile.renderer.compile(tile.renderer._currentDsl)
-            }
+            await tile.renderer.resume()
         }
     }
 
