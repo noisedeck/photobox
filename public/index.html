@@ -34,18 +34,20 @@
                         <canvas id="fullsize-canvas"></canvas>
                     </div>
                     <div class="fullsize-controls">
-                        <div class="mode-toggle">
-                            <button class="mode-btn active" data-mode="photo">Photo</button>
-                            <button class="mode-btn" data-mode="video">Video</button>
-                        </div>
-                        <div id="recording-status" class="recording-indicator hidden">
-                            <span class="recording-dot"></span>
-                            <span id="recording-timer">0:00</span>
+                        <div class="controls-left">
+                            <button id="grid-back-btn" class="grid-back-btn">Grid</button>
+                            <div class="mode-toggle">
+                                <button class="mode-btn active" data-mode="photo">Photo</button>
+                                <button class="mode-btn" data-mode="video">Video</button>
+                            </div>
                         </div>
                         <button id="shutter-btn" class="shutter-btn"></button>
-                        <div class="fullsize-bottom-row">
-                            <button id="grid-back-btn" class="grid-back-btn">Grid</button>
+                        <div class="controls-right">
                             <span id="effect-name" class="effect-name"></span>
+                            <div id="recording-status" class="recording-indicator hidden">
+                                <span class="recording-dot"></span>
+                                <span id="recording-timer">0:00</span>
+                            </div>
                         </div>
                     </div>
                 </div>
