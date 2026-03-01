@@ -41,7 +41,7 @@ class PhotobombApp {
         }
 
         // Initialize gallery
-        const filmstrip = document.getElementById('filmstrip')
+        const filmstrip = document.getElementById('filmstrip-thumbs')
         this._gallery = new Gallery(filmstrip)
         await this._gallery.init()
 

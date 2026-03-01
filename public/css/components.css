@@ -13,11 +13,10 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 4px;
+    gap: 2px;
     flex: 1;
     min-height: 0;
-    aspect-ratio: 16 / 9;
-    max-width: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
@@ -254,6 +253,18 @@
     .filmstrip-delete {
         display: flex;
     }
+}
+
+.filmstrip-thumbs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    width: 100%;
+}
+
+.filmstrip-thumbs::-webkit-scrollbar {
+    display: none;
 }
 
 /* Countdown overlay */
