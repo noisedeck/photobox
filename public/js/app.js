@@ -18,6 +18,8 @@ class PhotobombApp {
         this._currentEffect = null
         this._mode = 'photo' // 'photo' | 'video'
         this._view = 'grid'  // 'grid' | 'fullsize'
+        this._recording = null
+        this._timerInterval = null
     }
 
     async init() {
@@ -132,6 +134,50 @@ class PhotobombApp {
         const canvas = document.getElementById('fullsize-canvas')
         const blob = await capturePhoto(canvas)
         console.log(`[Photobomb] Photo captured: ${(blob.size / 1024).toFixed(0)}KB`)
+        // Gallery integration in Task 9
+    }
+
+    _toggleVideoRecording() {
+        if (this._recording) {
+            this._stopVideoRecording()
+        } else {
+            this._startVideoRecording()
+        }
+    }
+
+    _startVideoRecording() {
+        const canvas = document.getElementById('fullsize-canvas')
+        this._recording = startVideoRecording(canvas)
+
+        // Update UI
+        const shutter = document.getElementById('shutter-btn')
+        shutter.classList.add('recording')
+        document.getElementById('recording-status').classList.remove('hidden')
+
+        // Update timer
+        this._timerInterval = setInterval(() => {
+            const secs = Math.floor(this._recording.elapsed())
+            const mins = Math.floor(secs / 60)
+            const remainder = secs % 60
+            document.getElementById('recording-timer').textContent =
+                `${mins}:${String(remainder).padStart(2, '0')}`
+        }, 250)
+    }
+
+    async _stopVideoRecording() {
+        if (!this._recording) return
+
+        clearInterval(this._timerInterval)
+        const blob = await this._recording.stop()
+        this._recording = null
+
+        // Update UI
+        const shutter = document.getElementById('shutter-btn')
+        shutter.classList.remove('recording')
+        document.getElementById('recording-status').classList.add('hidden')
+        document.getElementById('recording-timer').textContent = '0:00'
+
+        console.log(`[Photobomb] Video captured: ${(blob.size / 1024 / 1024).toFixed(1)}MB`)
         // Gallery integration in Task 9
     }
 
