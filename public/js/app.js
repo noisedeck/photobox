@@ -85,30 +85,43 @@ class PhotobombApp {
         const effect = getEffect(this._currentTab, tileIndex)
         this._currentEffect = { ...effect, tileIndex }
 
+        const gridView = document.getElementById('grid-view')
+        const fullsizeView = document.getElementById('fullsize-view')
+
+        // Fade out grid
+        gridView.classList.add('fading')
+        await new Promise(r => setTimeout(r, 200))
+
         // Stop grid renderers
         this._grid.stopAll()
 
-        // Compile full-size renderer with selected effect
+        // Compile full-size renderer
         const fullsizeCanvas = document.getElementById('fullsize-canvas')
         fullsizeCanvas.width = this._camera.width
         fullsizeCanvas.height = this._camera.height
         this._fullsizeRenderer.resize(this._camera.width, this._camera.height)
         await this._fullsizeRenderer.compile(effect.dsl)
 
-        // Update UI
+        // Switch views
         document.getElementById('effect-name').textContent = effect.name
-        document.getElementById('grid-view').classList.add('hidden')
-        document.getElementById('fullsize-view').classList.remove('hidden')
+        gridView.classList.add('hidden')
+        gridView.classList.remove('fading')
+        fullsizeView.classList.remove('hidden')
         this._view = 'fullsize'
     }
 
     async _exitFullsize() {
-        // Stop full-size renderer
+        const gridView = document.getElementById('grid-view')
+        const fullsizeView = document.getElementById('fullsize-view')
+
+        fullsizeView.classList.add('fading')
+        await new Promise(r => setTimeout(r, 200))
+
         this._fullsizeRenderer.stop()
 
-        // Show grid, resume renderers
-        document.getElementById('fullsize-view').classList.add('hidden')
-        document.getElementById('grid-view').classList.remove('hidden')
+        fullsizeView.classList.add('hidden')
+        fullsizeView.classList.remove('fading')
+        gridView.classList.remove('hidden')
         this._view = 'grid'
 
         await this._grid.resumeAll()
