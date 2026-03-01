@@ -99,11 +99,12 @@ export class PhotobombRenderer {
         this._animRAF = requestAnimationFrame(tick)
     }
 
-    /** Resume rendering with the previously compiled DSL */
-    async resume() {
-        if (this._currentDsl) {
-            await this.compile(this._currentDsl)
-        }
+    /** Resume rendering (lightweight restart without recompiling) */
+    resume() {
+        if (!this._currentDsl) return
+        this._renderer.start()
+        this._uploadVideoTexture()
+        this._startLoop()
     }
 
     stop() {

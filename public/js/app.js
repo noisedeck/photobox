@@ -152,7 +152,7 @@ class PhotobombApp {
         gridView.classList.remove('hidden')
         this._view = 'grid'
 
-        await this._grid.resumeAll()
+        this._grid.resumeAll()
     }
 
     async _capturePhoto() {
