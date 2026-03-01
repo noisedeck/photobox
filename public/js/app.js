@@ -151,6 +151,7 @@ class PhotobombApp {
         fullsizeView.classList.add('hidden')
         fullsizeView.classList.remove('fading')
         gridView.classList.remove('hidden')
+        document.getElementById('save-btn').classList.add('hidden')
         this._view = 'grid'
 
         this._grid.resumeAll()
@@ -163,6 +164,7 @@ class PhotobombApp {
             const canvas = document.getElementById('fullsize-canvas')
             const blob = await capturePhoto(canvas)
             await this._gallery.add('photo', blob, canvas)
+            document.getElementById('save-btn').classList.remove('hidden')
             console.log(`[Photobomb] Photo captured: ${(blob.size / 1024).toFixed(0)}KB`)
         } catch (err) {
             console.error('[Photobomb] Photo capture failed:', err)
@@ -212,6 +214,7 @@ class PhotobombApp {
 
         const canvas = document.getElementById('fullsize-canvas')
         await this._gallery.add('video', blob, canvas)
+        document.getElementById('save-btn').classList.remove('hidden')
         console.log(`[Photobomb] Video captured: ${(blob.size / 1024 / 1024).toFixed(1)}MB`)
     }
 
@@ -230,6 +233,11 @@ class PhotobombApp {
                 const shutter = document.getElementById('shutter-btn')
                 shutter.classList.toggle('video-mode', this._mode === 'video')
             })
+        })
+
+        // Save button
+        document.getElementById('save-btn').addEventListener('click', () => {
+            this._gallery.downloadLatest()
         })
 
         // Shutter button

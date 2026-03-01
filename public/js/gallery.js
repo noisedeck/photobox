@@ -121,14 +121,26 @@ export class Gallery {
     }
 
     _handleThumbClick(capture) {
+        this._downloadCapture(capture)
+    }
+
+    _downloadCapture(capture) {
         const url = URL.createObjectURL(capture.blob)
         const a = document.createElement('a')
         a.href = url
         const ext = capture.type === 'photo' ? 'png'
             : capture.blob.type.includes('mp4') ? 'mp4' : 'webm'
         a.download = `photobomb-${capture.id}.${ext}`
+        document.body.appendChild(a)
         a.click()
-        URL.revokeObjectURL(url)
+        a.remove()
+        setTimeout(() => URL.revokeObjectURL(url), 1000)
+    }
+
+    /** Download the most recent capture */
+    downloadLatest() {
+        if (this._captures.length === 0) return
+        this._downloadCapture(this._captures[this._captures.length - 1])
     }
 
     /** Get total capture count */
