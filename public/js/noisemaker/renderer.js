@@ -6,7 +6,7 @@
  *   - Full-size: large canvas, single effect, dedicated view
  */
 
-import { CanvasRenderer } from './bundle.js'
+import { CanvasRenderer, extractEffectNamesFromDsl, getAllEffects } from './bundle.js'
 
 const SHADER_CDN = 'https://shaders.noisedeck.app/0.8.5'
 
@@ -57,6 +57,20 @@ export class PhotobombRenderer {
     async compile(dsl) {
         if (!this._initialized) throw new Error('Not initialized')
         this._currentDsl = dsl
+
+        // Load any unregistered effects referenced by the DSL
+        const effectData = extractEffectNamesFromDsl(dsl, this._renderer.manifest || {})
+        const registeredEffects = getAllEffects()
+        const effectIdsToLoad = effectData
+            .map(e => e.effectId)
+            .filter(id => {
+                const dotKey = id.replace('/', '.')
+                return !registeredEffects.has(id) && !registeredEffects.has(dotKey)
+            })
+        if (effectIdsToLoad.length > 0) {
+            await this._renderer.loadEffects(effectIdsToLoad)
+        }
+
         await this._renderer.compile(dsl)
         this._uploadVideoTexture()
         this._startLoop()
