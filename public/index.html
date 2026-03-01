@@ -15,7 +15,39 @@
             <h1>PHOTOBOMB</h1>
         </header>
         <main id="stage">
-            <!-- Grid and full-size views go here -->
+            <!-- Grid View -->
+            <div id="grid-view">
+                <div class="grid-container" id="effect-grid">
+                    <!-- 9 tiles created by JS -->
+                </div>
+                <div class="tab-bar" id="tab-bar">
+                    <!-- Tab buttons created by JS -->
+                </div>
+            </div>
+
+            <!-- Full-Size View (hidden initially) -->
+            <div id="fullsize-view" class="hidden">
+                <div class="fullsize-container">
+                    <div class="fullsize-canvas-wrapper">
+                        <canvas id="fullsize-canvas"></canvas>
+                    </div>
+                    <div class="fullsize-controls">
+                        <div class="mode-toggle">
+                            <button class="mode-btn active" data-mode="photo">Photo</button>
+                            <button class="mode-btn" data-mode="video">Video</button>
+                        </div>
+                        <div id="recording-status" class="recording-indicator hidden">
+                            <span class="recording-dot"></span>
+                            <span id="recording-timer">0:00</span>
+                        </div>
+                        <button id="shutter-btn" class="shutter-btn"></button>
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <button id="grid-back-btn" class="grid-back-btn">Grid</button>
+                            <span id="effect-name" class="effect-name"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
         <footer id="filmstrip">
             <!-- Gallery thumbnails -->
