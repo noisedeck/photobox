@@ -152,36 +152,6 @@
     color: var(--text);
 }
 
-/* Shutter row */
-.shutter-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-}
-
-.shutter-row-spacer {
-    width: 64px;
-}
-
-/* Save button */
-.save-btn {
-    width: 64px;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 8px 0;
-    border-radius: 16px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.15s;
-}
-
-.save-btn:hover {
-    border-color: var(--border-hover);
-    background: var(--bg-elevated);
-}
-
 /* Shutter button */
 .shutter-btn {
     width: 64px;

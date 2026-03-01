@@ -121,10 +121,10 @@ export class Gallery {
     }
 
     _handleThumbClick(capture) {
-        this._downloadCapture(capture)
+        this.download(capture)
     }
 
-    _downloadCapture(capture) {
+    download(capture) {
         const url = URL.createObjectURL(capture.blob)
         const a = document.createElement('a')
         a.href = url
@@ -135,12 +135,6 @@ export class Gallery {
         a.click()
         a.remove()
         setTimeout(() => URL.revokeObjectURL(url), 1000)
-    }
-
-    /** Download the most recent capture */
-    downloadLatest() {
-        if (this._captures.length === 0) return
-        this._downloadCapture(this._captures[this._captures.length - 1])
     }
 
     /** Get total capture count */
