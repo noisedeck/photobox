@@ -1,11 +1,11 @@
 /**
  * IndexedDB persistence for gallery captures
  *
- * Database 'photobomb', version 1, object store 'captures' with keyPath 'id'.
+ * Database 'photobox', version 1, object store 'captures' with keyPath 'id'.
  * Each record: { id, type, blob, thumbUrl }
  */
 
-const DB_NAME = 'photobomb'
+const DB_NAME = 'photobox'
 const DB_VERSION = 1
 const STORE = 'captures'
 

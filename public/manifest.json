@@ -1,6 +1,6 @@
 {
-    "name": "Photobomb",
-    "short_name": "Photobomb",
+    "name": "Photobox",
+    "short_name": "Photobox",
     "description": "Photo Booth powered by Noisemaker shaders",
     "start_url": "/",
     "display": "standalone",

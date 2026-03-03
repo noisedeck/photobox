@@ -106,7 +106,7 @@ class AboutDialog {
         if (buildInfoEl && this._metadata) {
             const hash = this._metadata.gitHash
             if (hash && hash !== 'LOCAL') {
-                buildInfoEl.innerHTML = `build: <a href="https://github.com/noisedeck/photobomb/tree/${hash}" class="about-modal-link" target="_blank" rel="noopener">${hash}</a> / deployed: ${this._metadata.deployed}`
+                buildInfoEl.innerHTML = `build: <a href="https://github.com/noisedeck/photobox/tree/${hash}" class="about-modal-link" target="_blank" rel="noopener">${hash}</a> / deployed: ${this._metadata.deployed}`
             } else {
                 buildInfoEl.textContent = `build: ${hash} / deployed: ${this._metadata.deployed}`
             }
@@ -131,12 +131,12 @@ class AboutDialog {
                     <div class="about-modal-icon-placeholder"></div>
                 </div>
                 <div class="about-modal-details" tabindex="-1">
-                    <div class="about-modal-title">Photobomb</div>
+                    <div class="about-modal-title">Photobox</div>
                     <div class="about-modal-version">version ${APP_VERSION.replace(/-.*$/, '')}</div>
                     <div class="about-modal-copyright">&copy; 2026 <a href="https://noisefactor.io/" class="about-modal-link" target="_blank" rel="noopener">Noise Factor LLC.</a></div>
                     <div class="about-modal-build">build: local / deployed: n/a</div>
                     <div class="about-modal-build noisemaker-version"></div>
-                    <div class="about-modal-ecosystem">Photobomb is a free tool by <a href="https://noisefactor.io/" target="_blank" rel="noopener">Noise Factor</a>, powered by the <a href="https://noisemaker.app/" target="_blank" rel="noopener">Noisemaker</a> open source engine. <a href="https://noisedeck.app/" target="_blank" rel="noopener">Noisedeck</a> is our video synth. Free to use, with a $4/mo subscription for pro features.</div>
+                    <div class="about-modal-ecosystem">Photobox is a free tool by <a href="https://noisefactor.io/" target="_blank" rel="noopener">Noise Factor</a>, powered by the <a href="https://noisemaker.app/" target="_blank" rel="noopener">Noisemaker</a> open source engine. <a href="https://noisedeck.app/" target="_blank" rel="noopener">Noisedeck</a> is our video synth. Free to use, with a $4/mo subscription for pro features.</div>
                 </div>
             </div>
         `

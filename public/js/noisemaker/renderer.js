@@ -1,5 +1,5 @@
 /**
- * PhotobombRenderer — wraps CanvasRenderer for Photobomb's use cases
+ * PhotoboxRenderer — wraps CanvasRenderer for Photobox's use cases
  *
  * Two modes:
  *   - Grid tile: small canvas, single effect, shared camera video element
@@ -10,7 +10,7 @@ import { CanvasRenderer, extractEffectNamesFromDsl, getAllEffects } from './bund
 
 const SHADER_CDN = 'https://shaders.noisedeck.app/0.8.5'
 
-export class PhotobombRenderer {
+export class PhotoboxRenderer {
     constructor(canvas, options = {}) {
         this._canvas = canvas
         this.width = options.width || canvas?.width || 640

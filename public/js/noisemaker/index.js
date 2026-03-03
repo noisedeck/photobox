@@ -1,6 +1,6 @@
 /**
- * Noisemaker integration for Photobomb
+ * Noisemaker integration for Photobox
  */
 
-export { PhotobombRenderer } from './renderer.js'
+export { PhotoboxRenderer } from './renderer.js'
 export { CanvasRenderer, compile, getAllEffects, BUNDLE_VERSION } from './bundle.js'

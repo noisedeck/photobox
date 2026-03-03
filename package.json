@@ -1,5 +1,5 @@
 {
-  "name": "photobomb",
+  "name": "photobox",
   "version": "0.1.0",
   "description": "Photo Booth clone powered by Noisemaker shader pipeline",
   "type": "module",

@@ -1,8 +1,8 @@
 /**
- * Photobomb — Photo Booth clone powered by Noisemaker
+ * Photobox — Photo Booth clone powered by Noisemaker
  */
 
-import { PhotobombRenderer } from './noisemaker/index.js'
+import { PhotoboxRenderer } from './noisemaker/index.js'
 import { Camera } from './camera.js'
 import { EffectGrid } from './grid.js'
 import { TABS, getTabEffects } from './effects.js'
@@ -11,7 +11,7 @@ import { Gallery } from './gallery.js'
 import { enableSwipe } from './swipe.js'
 import { aboutDialog } from './about-dialog.js'
 
-class PhotobombApp {
+class PhotoboxApp {
     constructor() {
         this._initialized = false
         this._camera = new Camera()
@@ -30,14 +30,14 @@ class PhotobombApp {
 
     async init() {
         if (this._initialized) return
-        console.log('[Photobomb] Initializing...')
+        console.log('[Photobox] Initializing...')
 
         // Start camera
         try {
             await this._camera.start()
-            console.log(`[Photobomb] Camera: ${this._camera.width}x${this._camera.height}`)
+            console.log(`[Photobox] Camera: ${this._camera.width}x${this._camera.height}`)
         } catch (err) {
-            console.error('[Photobomb] Camera access denied:', err)
+            console.error('[Photobox] Camera access denied:', err)
             const stage = document.getElementById('stage')
             stage.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-dim);"><p style="font-size: 18px; margin-bottom: 8px;">Camera access required</p><p>Please allow camera access and reload the page.</p></div>'
             return
@@ -64,7 +64,7 @@ class PhotobombApp {
 
         // Initialize full-size renderer
         const fullsizeCanvas = document.getElementById('fullsize-canvas')
-        this._fullsizeRenderer = new PhotobombRenderer(fullsizeCanvas, {
+        this._fullsizeRenderer = new PhotoboxRenderer(fullsizeCanvas, {
             width: this._camera.width,
             height: this._camera.height,
             preserveDrawingBuffer: true
@@ -76,7 +76,7 @@ class PhotobombApp {
         this._setupControls()
 
         this._initialized = true
-        console.log('[Photobomb] Ready')
+        console.log('[Photobox] Ready')
 
         this._showWelcomeToast()
     }
@@ -84,7 +84,7 @@ class PhotobombApp {
     _showWelcomeToast() {
         const toast = document.createElement('div')
         toast.className = 'welcome-toast'
-        toast.innerHTML = 'Welcome to Photobomb.<br>All data stays on your machine. Nothing is uploaded or transmitted.'
+        toast.innerHTML = 'Welcome to Photobox.<br>All data stays on your machine. Nothing is uploaded or transmitted.'
         document.getElementById('app').appendChild(toast)
 
         requestAnimationFrame(() => {
@@ -210,9 +210,9 @@ class PhotobombApp {
             const blob = await capturePhoto(canvas)
             const capture = await this._gallery.add('photo', blob, canvas)
             this._gallery.download(capture)
-            console.log(`[Photobomb] Photo captured: ${(blob.size / 1024).toFixed(0)}KB`)
+            console.log(`[Photobox] Photo captured: ${(blob.size / 1024).toFixed(0)}KB`)
         } catch (err) {
-            console.error('[Photobomb] Photo capture failed:', err)
+            console.error('[Photobox] Photo capture failed:', err)
         } finally {
             this._busy = false
         }
@@ -260,7 +260,7 @@ class PhotobombApp {
         const canvas = document.getElementById('fullsize-canvas')
         const capture = await this._gallery.add('video', blob, canvas)
         this._gallery.download(capture)
-        console.log(`[Photobomb] Video captured: ${(blob.size / 1024 / 1024).toFixed(1)}MB`)
+        console.log(`[Photobox] Video captured: ${(blob.size / 1024 / 1024).toFixed(1)}MB`)
     }
 
     async _cycleEffect(direction) {
@@ -326,5 +326,5 @@ class PhotobombApp {
     }
 }
 
-const app = new PhotobombApp()
-app.init().catch(err => console.error('[Photobomb] Init failed:', err))
+const app = new PhotoboxApp()
+app.init().catch(err => console.error('[Photobox] Init failed:', err))

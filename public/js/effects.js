@@ -1,5 +1,5 @@
 /**
- * Effect preset definitions for Photobomb
+ * Effect preset definitions for Photobox
  *
  * Each effect has:
  *   - name: display name

@@ -130,7 +130,7 @@ export class Gallery {
         a.href = url
         const ext = capture.type === 'photo' ? 'png'
             : capture.blob.type.includes('mp4') ? 'mp4' : 'webm'
-        a.download = `photobomb-${capture.id}.${ext}`
+        a.download = `photobox-${capture.id}.${ext}`
         document.body.appendChild(a)
         a.click()
         a.remove()

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Photobomb', () => {
+test.describe('Photobox', () => {
     test('loads and shows grid view', async ({ page, context }) => {
         await page.setViewportSize({ width: 1280, height: 800 })
         await context.grantPermissions(['camera'])

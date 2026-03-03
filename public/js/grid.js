@@ -1,11 +1,11 @@
 /**
  * Grid module — manages the effect preview grid
  *
- * Creates tile elements, each with its own canvas and PhotobombRenderer.
+ * Creates tile elements, each with its own canvas and PhotoboxRenderer.
  * All renderers share the same camera video element as texture source.
  */
 
-import { PhotobombRenderer } from './noisemaker/index.js'
+import { PhotoboxRenderer } from './noisemaker/index.js'
 
 const TILE_BASE = 320
 const TILE_COUNT = 9
@@ -56,7 +56,7 @@ export class EffectGrid {
 
             this._container.appendChild(tile)
 
-            const renderer = new PhotobombRenderer(canvas, {
+            const renderer = new PhotoboxRenderer(canvas, {
                 width: this._tileWidth,
                 height: this._tileHeight
             })
