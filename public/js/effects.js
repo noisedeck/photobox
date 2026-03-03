@@ -9,7 +9,7 @@
  * The "Normal" center tile has no effect chain.
  */
 
-const NORMAL = {
+export const NORMAL = {
     name: 'Normal',
     dsl: `search synth\n\nmedia().write(o0)\n\nrender(o0)`
 }
@@ -93,12 +93,14 @@ export const TABS = [
     }
 ]
 
-/** Get the effect at grid position (0-8) for the given tab index */
-export function getEffect(tabIndex, tileIndex) {
-    return TABS[tabIndex]?.effects[tileIndex] || NORMAL
-}
-
-/** Get all effect names for a tab */
-export function getEffectNames(tabIndex) {
-    return TABS[tabIndex]?.effects.map(e => e.name) || []
+/**
+ * Get effects for a tab, optionally excluding Normal.
+ * @param {number} tabIndex
+ * @param {boolean} excludeNormal - if true, filter out the Normal effect
+ * @returns {Array<{name: string, dsl: string}>}
+ */
+export function getTabEffects(tabIndex, excludeNormal = false) {
+    const effects = TABS[tabIndex]?.effects || []
+    if (!excludeNormal) return effects
+    return effects.filter(e => e !== NORMAL)
 }

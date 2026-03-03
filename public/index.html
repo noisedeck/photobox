@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Photobomb</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0a0a0a">
@@ -23,7 +23,7 @@
             <!-- Grid View -->
             <div id="grid-view">
                 <div class="grid-container" id="effect-grid">
-                    <!-- 9 tiles created by JS -->
+                    <!-- tiles created by JS -->
                 </div>
             </div>
 
@@ -32,6 +32,11 @@
                 <div class="fullsize-container">
                     <div class="fullsize-canvas-wrapper">
                         <canvas id="fullsize-canvas"></canvas>
+                    </div>
+                    <div class="fullsize-top-bar">
+                        <button id="grid-back-btn-mobile" class="grid-back-btn">Grid</button>
+                        <span id="effect-name-mobile" class="effect-name"></span>
+                        <span></span><!-- spacer for centering -->
                     </div>
                     <div class="fullsize-controls">
                         <div class="controls-left">

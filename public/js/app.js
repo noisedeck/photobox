@@ -5,9 +5,14 @@
 import { PhotobombRenderer } from './noisemaker/index.js'
 import { Camera } from './camera.js'
 import { EffectGrid } from './grid.js'
-import { TABS, getEffect } from './effects.js'
+import { TABS, getTabEffects } from './effects.js'
 import { capturePhoto, startVideoRecording } from './capture.js'
 import { Gallery } from './gallery.js'
+import { enableSwipe } from './swipe.js'
+
+function isMobile() {
+    return window.matchMedia('(max-width: 600px)').matches
+}
 
 class PhotobombApp {
     constructor() {
@@ -23,6 +28,7 @@ class PhotobombApp {
         this._timerInterval = null
         this._gallery = null
         this._busy = false
+        this._swipe = null
     }
 
     async init() {
@@ -47,7 +53,8 @@ class PhotobombApp {
 
         // Initialize grid
         const gridContainer = document.getElementById('effect-grid')
-        this._grid = new EffectGrid(gridContainer, this._camera.video)
+        const tileCount = isMobile() ? 8 : 9
+        this._grid = new EffectGrid(gridContainer, this._camera.video, { tileCount })
         await this._grid.init()
 
         // Set up tile click handler
@@ -76,6 +83,12 @@ class PhotobombApp {
         console.log('[Photobomb] Ready')
     }
 
+    _setEffectName(name) {
+        document.getElementById('effect-name').textContent = name
+        const mobile = document.getElementById('effect-name-mobile')
+        if (mobile) mobile.textContent = name
+    }
+
     _buildTabs() {
         const tabBar = document.getElementById('tab-bar')
         tabBar.innerHTML = ''
@@ -90,7 +103,7 @@ class PhotobombApp {
 
     async _switchTab(tabIndex) {
         this._currentTab = tabIndex
-        const effects = TABS[tabIndex].effects
+        const effects = getTabEffects(tabIndex, isMobile())
 
         // Update active tab button
         document.querySelectorAll('.tab-btn').forEach((btn, i) => {
@@ -102,9 +115,11 @@ class PhotobombApp {
 
     async _enterFullsize(tileIndex) {
         if (this._view === 'fullsize' || this._busy) return
+        const effects = getTabEffects(this._currentTab, isMobile())
+        const effect = effects[tileIndex]
+        if (!effect) return
         this._busy = true
         try {
-            const effect = getEffect(this._currentTab, tileIndex)
             this._currentEffect = { ...effect, tileIndex }
 
             const gridView = document.getElementById('grid-view')
@@ -125,7 +140,7 @@ class PhotobombApp {
             await this._fullsizeRenderer.compile(effect.dsl)
 
             // Switch views
-            document.getElementById('effect-name').textContent = effect.name
+            this._setEffectName(effect.name)
             gridView.classList.add('hidden')
             gridView.classList.remove('fading')
             fullsizeView.classList.remove('hidden')
@@ -133,6 +148,13 @@ class PhotobombApp {
 
             document.getElementById('tab-bar').classList.add('hidden')
             document.getElementById('filmstrip-thumbs').classList.remove('hidden')
+
+            // Enable swipe gestures
+            const canvasWrapper = document.querySelector('.fullsize-canvas-wrapper')
+            this._swipe = enableSwipe(canvasWrapper, {
+                onSwipeLeft: () => this._cycleEffect(1),
+                onSwipeRight: () => this._cycleEffect(-1)
+            })
         } finally {
             this._busy = false
         }
@@ -148,6 +170,11 @@ class PhotobombApp {
 
         fullsizeView.classList.add('fading')
         await new Promise(r => setTimeout(r, 200))
+
+        if (this._swipe) {
+            this._swipe.destroy()
+            this._swipe = null
+        }
 
         this._fullsizeRenderer.stop()
 
@@ -223,9 +250,33 @@ class PhotobombApp {
         console.log(`[Photobomb] Video captured: ${(blob.size / 1024 / 1024).toFixed(1)}MB`)
     }
 
+    async _cycleEffect(direction) {
+        if (this._busy || this._recording) return
+        this._busy = true
+        try {
+            const effects = getTabEffects(this._currentTab, isMobile())
+            const currentIndex = effects.findIndex(e => e.name === this._currentEffect.name)
+            let nextIndex = currentIndex + direction
+            if (nextIndex < 0) nextIndex = effects.length - 1
+            if (nextIndex >= effects.length) nextIndex = 0
+
+            const effect = effects[nextIndex]
+            this._currentEffect = { ...effect, tileIndex: nextIndex }
+
+            await this._fullsizeRenderer.compile(effect.dsl)
+            this._setEffectName(effect.name)
+        } finally {
+            this._busy = false
+        }
+    }
+
     _setupControls() {
         // Grid back button
         document.getElementById('grid-back-btn').addEventListener('click', () => {
+            this._exitFullsize()
+        })
+
+        document.getElementById('grid-back-btn-mobile')?.addEventListener('click', () => {
             this._exitFullsize()
         })
 

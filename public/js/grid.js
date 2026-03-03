@@ -1,7 +1,7 @@
 /**
- * Grid module — manages the 3x3 effect preview grid
+ * Grid module — manages the effect preview grid
  *
- * Creates 9 tile elements, each with its own canvas and PhotobombRenderer.
+ * Creates tile elements, each with its own canvas and PhotobombRenderer.
  * All renderers share the same camera video element as texture source.
  */
 
@@ -13,16 +13,17 @@ export class EffectGrid {
     /**
      * @param {HTMLElement} container - the grid container element
      * @param {HTMLVideoElement} videoSource - camera video element
+     * @param {object} options - { tileCount: number }
      */
-    constructor(container, videoSource) {
+    constructor(container, videoSource, options = {}) {
         this._container = container
         this._videoSource = videoSource
-        // Derive tile dimensions from camera aspect ratio
+        this._tileCount = options.tileCount || 9
         const camW = videoSource.videoWidth || 1280
         const camH = videoSource.videoHeight || 720
         this._tileWidth = TILE_BASE
         this._tileHeight = Math.round(TILE_BASE * camH / camW)
-        this._tiles = []       // { canvas, renderer, name }
+        this._tiles = []
         this._initialized = false
         this._onTileClick = null
     }
@@ -30,16 +31,13 @@ export class EffectGrid {
     /** Set callback for tile clicks: (tileIndex, effectName) => {} */
     set onTileClick(fn) { this._onTileClick = fn }
 
-    /**
-     * Initialize the grid with 9 tiles.
-     * Each tile gets a canvas and renderer.
-     */
+    /** Initialize the grid. Each tile gets a canvas and renderer. */
     async init() {
         if (this._initialized) return
 
         this._container.innerHTML = ''
 
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < this._tileCount; i++) {
             const tile = document.createElement('div')
             tile.className = 'grid-tile'
             tile.dataset.index = i
@@ -73,8 +71,8 @@ export class EffectGrid {
     }
 
     /**
-     * Load a set of 9 effects into the grid.
-     * @param {Array<{name: string, dsl: string}>} effects - 9 effect definitions
+     * Load effects into the grid.
+     * @param {Array<{name: string, dsl: string}>} effects
      */
     async loadEffects(effects) {
         const promises = effects.map(async (effect, i) => {
